@@ -5,7 +5,7 @@ import com.typesafe.sbt.pgp.PgpKeys
 import sbtcrossproject.CrossProject
 import sbtcrossproject.CrossType
 
-val Org = "org.scoverage"
+val Org = "com.twitter.scoverage"
 val ScalatestVersion = "3.0.8"
 
 val appSettings = Seq(
@@ -18,6 +18,7 @@ val appSettings = Seq(
     parallelExecution in Test := false,
     scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8"),
     concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
+    useGpg := true,
     publishTo := {
       if (isSnapshot.value)
         Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
@@ -25,7 +26,7 @@ val appSettings = Seq(
         Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
     },
     pomExtra := {
-      <url>https://github.com/scoverage/scalac-scoverage-plugin</url>
+      <url>https://github.com/twitter-forks/scalac-scoverage-plugin</url>
         <licenses>
           <license>
             <name>Apache 2</name>
@@ -34,8 +35,8 @@ val appSettings = Seq(
           </license>
         </licenses>
         <scm>
-          <url>git@github.com:scoverage/scalac-scoverage-plugin.git</url>
-          <connection>scm:git@github.com:scoverage/scalac-scoverage-plugin.git</connection>
+          <url>git@hgithub.com/twitter-forks/scalac-scoverage-plugin.git</url>
+          <connection>scm:git@github.com/twitter-forks/scalac-scoverage-plugin.git</connection>
         </scm>
         <developers>
           <developer>
@@ -55,7 +56,6 @@ val appSettings = Seq(
     }
   ) ++ Seq(
     releaseCrossBuild := true,
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value
   )
 
 lazy val root = Project("scalac-scoverage", file("."))
