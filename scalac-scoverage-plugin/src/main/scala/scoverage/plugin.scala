@@ -228,7 +228,7 @@ class ScoverageInstrumentationComponent(val global: Global, extraAfterPhase: Opt
     if (options.writeToClasspath){
       /**
        * We pass in [targetId] as one of the instruments with
-       * [invokedUseEnvironment] as it helps in
+       * [invokedWriteToClasspath] as it helps in
        * 1. grabbing the "correct" instruments file from the classpath at runtime.
        * 2. creating a unique subdir for each target at runtime.
        * iff targetIds are unique per target.
