@@ -15,7 +15,7 @@ object IOUtils {
 
   private val UnixSeperator: Char = '/'
   private val WindowsSeperator: Char = '\\'
-  private val UTF8Encoding: String = "UTF-8"
+  val UTF8Encoding: String = "UTF-8"
 
   def getName(path: String): Any = {
     val index = {
@@ -34,8 +34,10 @@ object IOUtils {
   def clean(dataDir: File): Unit = findMeasurementFiles(dataDir).foreach(_.delete)
   def clean(dataDir: String): Unit = clean(new File(dataDir))
 
+  def writer(file: File) : Writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), UTF8Encoding))
+
   def writeToFile(file: File, str: String) = {
-    val writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), UTF8Encoding))
+    val writer = this.writer(file)
     try {
       writer.write(str)
     } finally {

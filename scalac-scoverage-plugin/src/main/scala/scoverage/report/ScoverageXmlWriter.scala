@@ -4,7 +4,7 @@ import java.io.File
 
 import scoverage._
 
-import scala.xml.{Node, PrettyPrinter}
+import scala.xml.{Node, XML}
 
 /** @author Stephen Samuel */
 class ScoverageXmlWriter(sourceDirectories: Seq[File], outputDir: File, debug: Boolean) extends BaseReportWriter(sourceDirectories, outputDir) {
@@ -15,7 +15,16 @@ class ScoverageXmlWriter(sourceDirectories: Seq[File], outputDir: File, debug: B
 
   def write(coverage: Coverage): Unit = {
     val file = IOUtils.reportFile(outputDir, debug)
-    IOUtils.writeToFile(file, new PrettyPrinter(120, 4).format(xml(coverage)))
+    val writer = IOUtils.writer(file)
+    try {
+      writer.write(header(coverage))
+      coverage.packages.foreach { p =>
+        XML.write(writer, pack(p), IOUtils.UTF8Encoding, xmlDecl = false, null)
+      }
+      writer.write(footer)
+    } finally {
+      writer.close()
+    }
   }
 
   private def xml(coverage: Coverage): Node = {
@@ -29,6 +38,22 @@ class ScoverageXmlWriter(sourceDirectories: Seq[File], outputDir: File, debug: B
         {coverage.packages.map(pack)}
       </packages>
     </scoverage>
+  }
+
+  private def header(coverage: Coverage): String = {
+    s"""<scoverage statement-count="${coverage.statementCount.toString}"
+       |           statements-invoked="${coverage.invokedStatementCount.toString}"
+       |           statement-rate="${coverage.statementCoverageFormatted}"
+       |           branch-rate="${coverage.branchCoverageFormatted}"
+       |           version="1.0"
+       |           timestamp="${System.currentTimeMillis.toString}">
+       |  <packages>
+       |""".stripMargin
+  }
+  private val footer: String = {
+    """   </packages>
+      |</scoverage>
+      |""".stripMargin
   }
 
   private def statement(stmt: Statement): Node = {
