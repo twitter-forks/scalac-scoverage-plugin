@@ -6,12 +6,12 @@ import sbtcrossproject.CrossProject
 import sbtcrossproject.CrossType
 
 val Org = "com.twitter.scoverage"
-val ScalatestVersion = "3.0.8"
+val ScalatestVersion = "3.1.1"
 
 val appSettings = Seq(
     organization := Org,
-    scalaVersion := "2.12.8",
-    crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.8", "2.13.0"),
+    scalaVersion := "2.12.13",
+    crossScalaVersions := Seq("2.12.13", "2.13.0"),
     fork in Test := false,
     publishMavenStyle := true,
     publishArtifact in Test := false,
@@ -19,12 +19,14 @@ val appSettings = Seq(
     scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8"),
     concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
     useGpg := true,
-    publishTo := {
-      if (isSnapshot.value)
-        Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
-      else
-        Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
-    },
+    credentials += Credentials(Path.userHome / ".artifactory.credentials"),
+    // publishTo := {
+    //   if (isSnapshot.value)
+    //     Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
+    //   else
+    //     Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+    // },
+    publishTo := Some("releases" at "https://artifactory.twitter.biz/libs-releases-local"),
     pomExtra := {
       <url>https://github.com/twitter-forks/scalac-scoverage-plugin</url>
         <licenses>
