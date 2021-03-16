@@ -69,7 +69,7 @@ object ScoverageCompiler {
   }
 }
 
-class ScoverageCompiler(settings: scala.tools.nsc.Settings, reporter: scala.tools.nsc.reporters.Reporter)
+class ScoverageCompiler(settings: scala.tools.nsc.Settings, reporter: scala.tools.nsc.reporters.FilteringReporter)
   extends scala.tools.nsc.Global(settings, reporter) {
 
   def addToClassPath(file: File): Unit = {
