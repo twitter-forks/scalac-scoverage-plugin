@@ -19,6 +19,7 @@ val appSettings = Seq(
     scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8"),
     concurrentRestrictions in Global += Tags.limit(Tags.Test, 1),
     useGpg := true,
+    credentials += Credentials(Path.userHome / ".sbt" / "sonatype_credentials"),
     publishTo := {
       if (isSnapshot.value)
         Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
